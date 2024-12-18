@@ -27,13 +27,11 @@ import Morphir.IR.Name as Name exposing (Name)
 encodeName : Name -> Encode.Value
 encodeName name =
     name
-        |> Name.toList
-        |> Encode.list Encode.string
+        |> Encode.string
 
 
 {-| Decode a name from JSON.
 -}
 decodeName : Decode.Decoder Name
 decodeName =
-    Decode.list Decode.string
-        |> Decode.map Name.fromList
+    Decode.string

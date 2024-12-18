@@ -27,7 +27,6 @@ import Morphir.IR.Name as Name exposing (Name)
 encodeName : Name -> Encode.Value
 encodeName name =
     name
-        |> Name.toCamelCase
         |> Encode.string
 
 
@@ -36,4 +35,3 @@ encodeName name =
 decodeName : Decode.Decoder Name
 decodeName =
     Decode.string
-        |> Decode.map Name.fromString

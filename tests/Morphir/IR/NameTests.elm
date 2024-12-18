@@ -28,99 +28,99 @@ import Test exposing (..)
 fromStringTests : Test
 fromStringTests =
     let
-        assert inString outList =
+        assert inString outString =
             test ("From string " ++ inString) <|
                 \_ ->
                     Name.fromString inString
-                        |> Expect.equal (Name.fromList outList)
+                        |> Expect.equal outString
     in
     describe "fromString"
-        [ assert "fooBar_baz 123" [ "foo", "bar", "baz", "123" ]
-        , assert "valueInUSD" [ "value", "in", "u", "s", "d" ]
-        , assert "ValueInUSD" [ "value", "in", "u", "s", "d" ]
-        , assert "value_in_USD" [ "value", "in", "u", "s", "d" ]
-        , assert "_-% " []
+        [ assert "fooBar_baz 123" "fooBar_baz 123"
+        , assert "valueInUSD" "valueInUSD"
+        , assert "ValueInUSD" "ValueInUSD"
+        , assert "value_in_USD" "value_in_USD"
+        , assert "_-% " "_-% "
         ]
 
 
 toTitleCaseTests : Test
 toTitleCaseTests =
     let
-        assert inList outString =
+        assert inString outString =
             test ("Title case " ++ outString) <|
                 \_ ->
-                    Name.fromList inList
+                    Name.fromString inString
                         |> Name.toTitleCase
                         |> Expect.equal outString
     in
     describe "toTitleCase"
-        [ assert [ "foo", "bar", "baz", "123" ] "FooBarBaz123"
-        , assert [ "value", "in", "u", "s", "d" ] "ValueInUSD"
+        [ assert "fooBar_baz 123" "Foobarbaz123"
+        , assert "valueInUSD" "Valueinusd"
         ]
 
 
 toCamelCaseTests : Test
 toCamelCaseTests =
     let
-        assert inList outString =
+        assert inString outString =
             test ("Camel case " ++ outString) <|
                 \_ ->
-                    Name.fromList inList
+                    Name.fromString inString
                         |> Name.toCamelCase
                         |> Expect.equal outString
     in
     describe "toCamelCase"
-        [ assert [ "foo", "bar", "baz", "123" ] "fooBarBaz123"
-        , assert [ "value", "in", "u", "s", "d" ] "valueInUSD"
+        [ assert "fooBar_baz 123" "foobarbaz123"
+        , assert "valueInUSD" "valueinusd"
         ]
 
 
 toSnakeCaseTests : Test
 toSnakeCaseTests =
     let
-        assert inList outString =
+        assert inString outString =
             test ("Snake case " ++ outString) <|
                 \_ ->
-                    Name.fromList inList
+                    Name.fromString inString
                         |> Name.toSnakeCase
                         |> Expect.equal outString
     in
     describe "toSnakeCase"
-        [ assert [ "foo", "bar", "baz", "123" ] "foo_bar_baz_123"
-        , assert [ "value", "in", "u", "s", "d" ] "value_in_USD"
+        [ assert "fooBar_baz 123" "foo_bar_baz_123"
+        , assert "valueInUSD" "value_in_usd"
         ]
 
 
 toHumanWordsTests : Test
 toHumanWordsTests =
     let
-        assert inList outList =
+        assert inString outList =
             test ("Human words " ++ (outList |> String.join " ")) <|
                 \_ ->
-                    Name.fromList inList
+                    Name.fromString inString
                         |> Name.toHumanWords
                         |> Expect.equal outList
     in
     describe "toHumanWords"
-        [ assert [ "foo", "bar", "baz", "123" ] [ "foo", "bar", "baz", "123" ]
-        , assert [ "value", "in", "u", "s", "d" ] [ "value", "in", "USD" ]
+        [ assert "fooBar_baz 123" [ "foobarbaz123" ]
+        , assert "valueInUSD" [ "valueinusd" ]
         ]
 
 
 encodeNameTests : Test
 encodeNameTests =
     let
-        assert inList expectedText =
+        assert inString expectedText =
             test ("encodeName " ++ (expectedText ++ " ")) <|
                 \_ ->
-                    Name.fromList inList
+                    Name.fromString inString
                         |> encodeName
                         |> encode 0
                         |> Expect.equal expectedText
     in
     describe "encodeName"
-        [ assert [ "delta", "sigma", "theta" ] """\"deltaSigmaTheta\""""
-        , assert [ "sigma", "gamma", "ro" ] """\"sigmaGammaRo\""""
+        [ assert "deltaSigmaTheta" """\"deltaSigmaTheta\""""
+        , assert "sigmaGammaRo" """\"sigmaGammaRo\""""
         ]
 
 
@@ -135,6 +135,6 @@ decodeNameTests =
                         |> Expect.equal (Ok expectedName)
     in
     describe "decodeName"
-        [ assert "\"deltaSigmaTheta\"" (Name.fromList [ "delta", "sigma", "theta" ])
-        , assert "\"sigmaGammaRo\"" (Name.fromList [ "sigma", "gamma", "ro" ])
+        [ assert "\"deltaSigmaTheta\"" "deltaSigmaTheta"
+        , assert "\"sigmaGammaRo\"" "sigmaGammaRo"
         ]

@@ -15,11 +15,11 @@
 -}
 
 
-module Morphir.IR.FQName exposing (FQName, fQName, fromQName, getPackagePath, getModulePath, getLocalName, fqn, toString, fromString, fromStringStrict)
+module Morphir.IR.FQName exposing (FQName, fQName, fromQName, getPackagePath, getModulePath, getLocalName, fqn, toString, fromString, fromStringStrict, empty)
 
 {-| Module to work with fully-qualified names. A qualified name is a combination of a package path, a module path and a local name.
 
-@docs FQName, fQName, fromQName, getPackagePath, getModulePath, getLocalName, fqn, toString, fromString, fromStringStrict
+@docs FQName, fQName, fromQName, getPackagePath, getModulePath, getLocalName, fqn, toString, fromString, fromStringStrict, empty
 
 -}
 
@@ -103,7 +103,7 @@ fromString fqNameString splitter =
             )
 
         _ ->
-            ( [ [] ], [], [] )
+            empty
 
 
 {-| Parse a string into a FQName using splitter as the separator between package, module and local names. Fail if it's
@@ -132,3 +132,10 @@ fromStringStrict fqNameString separator =
                     , "' as the separator."
                     ]
                 )
+
+
+{-| Create an empty fully-qualified name.
+-}
+empty : FQName
+empty =
+    ( [], [], "" )
