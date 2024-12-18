@@ -2,6 +2,7 @@ module Morphir.JsonSchema.Backend.Codec exposing (..)
 
 import Json.Decode as Decode exposing (Decoder)
 import Json.Encode as Encode
+import Morphir.IR.Name.Codec exposing (decodeName, encodeName)
 import Morphir.IR.Path as Path
 import Morphir.JsonSchema.Backend exposing (Errors, Options)
 import Set

@@ -283,7 +283,7 @@ mapType qName typ =
                     tupleSchemaList
                         |> ResultList.keepAllErrors
                         |> Result.mapError List.concat
-                        |> Result.map (\tupleSchema -> Array (ListType (Array (TupleType tupleSchema) False)) True)
+                        |> Result.map (\tupleSchema -> Array (TupleType tupleSchema) True)
 
                 _ ->
                     Ok
@@ -415,7 +415,7 @@ generateSchemaByTypeNameOrModuleName inputString pkgName pkgDef =
                 Just moduleDefi ->
                     let
                         typeDefinitionsFound =
-                            getTypeDefinitionsFromModule typeName modulePath (Just moduleDefi) pkgName pkgDef
+                            getTypeDefinitionsFromModule (Name.fromString (List.head typeName |> Maybe.withDefault "")) modulePath (Just moduleDefi) pkgName pkgDef
                     in
                     if (typeDefinitionsFound |> List.length) > 0 then
                         typeDefinitionsFound
@@ -435,7 +435,7 @@ generateSchemaByTypeNameOrModuleName inputString pkgName pkgDef =
                                 )
 
                     else
-                        Err [ "Type " ++ (typeName |> Name.toTitleCase) ++ " not found in the module: " ++ Path.toString Name.toTitleCase "." modulePath ]
+                        Err [ "Type " ++ (typeName |> List.head |> Maybe.withDefault "" |> Name.toTitleCase) ++ " not found in the module: " ++ Path.toString Name.toTitleCase "." modulePath ]
 
                 Nothing ->
                     Err [ "Module found in the package: " ++ inputString ]
