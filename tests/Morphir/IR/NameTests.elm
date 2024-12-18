@@ -19,8 +19,9 @@ limitations under the License.
 
 import Expect
 import Json.Encode exposing (encode)
+import Json.Decode exposing (decodeString)
 import Morphir.IR.Name as Name
-import Morphir.IR.Name.Codec exposing (encodeName)
+import Morphir.IR.Name.Codec exposing (encodeName, decodeName)
 import Test exposing (..)
 
 
@@ -118,6 +119,22 @@ encodeNameTests =
                         |> Expect.equal expectedText
     in
     describe "encodeName"
-        [ assert [ "delta", "sigma", "theta" ] """["delta","sigma","theta"]"""
-        , assert [ "sigma", "gamma", "ro" ] """["sigma","gamma","ro"]"""
+        [ assert [ "delta", "sigma", "theta" ] """\"deltaSigmaTheta\""""
+        , assert [ "sigma", "gamma", "ro" ] """\"sigmaGammaRo\""""
+        ]
+
+
+decodeNameTests : Test
+decodeNameTests =
+    let
+        assert jsonString expectedName =
+            test ("decodeName " ++ jsonString) <|
+                \_ ->
+                    decodeString decodeName jsonString
+                        |> Result.mapError (always "Decoding failed")
+                        |> Expect.equal (Ok expectedName)
+    in
+    describe "decodeName"
+        [ assert "\"deltaSigmaTheta\"" (Name.fromList [ "delta", "sigma", "theta" ])
+        , assert "\"sigmaGammaRo\"" (Name.fromList [ "sigma", "gamma", "ro" ])
         ]
